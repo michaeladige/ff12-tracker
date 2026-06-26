@@ -6,6 +6,11 @@ An interactive game tracker and checklist website for **Final Fantasy XII: The Z
 
 - **Dashboard** -- Overview of your game progress with completion percentages
 - **Quest Tracker** -- Track main quests, side quests, hunts, and elite hunts
+- **Bestiary** -- Browse 50+ enemies with stats, weaknesses, drops, steals, and poach rates
+- **Loot & Bazaar** -- Track 212 loot items and 28 bazaar recipes with ingredients
+- **Hunt Guide** -- Detailed hunt info with target stats, strategies, and walkthroughs
+- **Boss Guide** -- 22 story bosses + 12 espers with drops and strategies
+- **Rare Games** -- 79 rare enemies with spawn conditions and weaknesses
 - **Equipment Checklist** -- Organize weapons, armor, accessories, and shields
 - **Recipes & Abilities** -- Browse bazaar recipes, synthesis, magic spells, technicks, and espers
 - **Trophies & Characters** -- Track trophies, character jobs, and explored zones
@@ -76,23 +81,32 @@ ff12-tracker/
 ├── public/
 ├── src/
 │   ├── components/         # React components
+│   │   ├── BestiaryBrowser.jsx
+│   │   ├── BossGuide.jsx
 │   │   ├── ChecklistSection.jsx
 │   │   ├── Dashboard.jsx
 │   │   ├── EquipmentChecklist.jsx
 │   │   ├── GuideViewer.jsx
+│   │   ├── HuntGuide.jsx
+│   │   ├── LootTracker.jsx
 │   │   ├── QuestTracker.jsx
+│   │   ├── RareGameTracker.jsx
 │   │   ├── RecipeBook.jsx
 │   │   ├── Settings.jsx
 │   │   └── TrophiesAndCharacters.jsx
 │   ├── context/
 │   │   └── ProgressContext.jsx    # Global state + localStorage
-│   ├── data/                     # Game data (quests, equipment, recipes)
-│   │   ├── equipment.js
-│   │   ├── quests.js
-│   │   ├── recipes.js
-│   │   └── world.js
-│   ├── utils/
-│   │   └── progressUtils.js
+│   ├── data/                     # Game data
+│   │   ├── bestiary.js           # Enemy stats, drops, steals
+│   │   ├── bosses.js             # Story bosses + espers
+│   │   ├── bazaarItems.js        # Bazaar crafting recipes
+│   │   ├── equipment.js          # Weapons, armor, accessories
+│   │   ├── huntDetails.js        # Hunt targets, stats, strategies
+│   │   ├── loot.js               # 212 loot items
+│   │   ├── quests.js             # Main/side quests, hunts
+│   │   ├── rareGames.js          # 79 rare enemies
+│   │   ├── recipes.js            # Magic, technicks, espers
+│   │   └── world.js              # Zones, characters, trophies
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
@@ -109,9 +123,12 @@ All game data is sourced from the [GameFAQs walkthrough](https://gamefaqs.gamesp
 Data includes:
 - 33 main quest steps across 6 chapters
 - 24 side quests
-- 18 hunts + 6 elite hunts
+- 18 hunts + 6 elite hunts (with target stats, strategies, walkthroughs)
+- 22 story bosses + 12 espers (with drops and strategies)
+- 50+ bestiary enemies (with HP, MP, weaknesses, drops, steals, poach rates)
+- 79 rare games (with spawn conditions and weaknesses)
+- 212 loot items + 28 bazaar recipes
 - 70+ weapons, 39 armor pieces, 24 accessories, 12 shields
-- 18 bazaar recipes, 12 synthesis recipes
 - 40 magic spells, 23 technicks, 12 espers
 - 13 trophies, 32 zones, 6 playable characters
 
