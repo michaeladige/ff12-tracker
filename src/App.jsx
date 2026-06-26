@@ -6,6 +6,11 @@ import EquipmentChecklist from './components/EquipmentChecklist';
 import RecipeBook from './components/RecipeBook';
 import TrophiesAndCharacters from './components/TrophiesAndCharacters';
 import GuideViewer from './components/GuideViewer';
+import BestiaryBrowser from './components/BestiaryBrowser';
+import LootTracker from './components/LootTracker';
+import HuntGuide from './components/HuntGuide';
+import BossGuide from './components/BossGuide';
+import RareGameTracker from './components/RareGameTracker';
 import SettingsPage from './components/Settings';
 import {
   Home,
@@ -14,6 +19,11 @@ import {
   FlaskConical,
   Trophy,
   BookOpen,
+  Bug,
+  Package,
+  Target,
+  Crown,
+  Star,
   Settings as SettingsIcon,
   Menu,
   X,
@@ -22,6 +32,11 @@ import {
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'quests', label: 'Quests', icon: Swords },
+  { id: 'bestiary', label: 'Bestiary', icon: Bug },
+  { id: 'loot', label: 'Loot', icon: Package },
+  { id: 'hunts', label: 'Hunts', icon: Target },
+  { id: 'bosses', label: 'Bosses', icon: Crown },
+  { id: 'rare', label: 'Rare Games', icon: Star },
   { id: 'equipment', label: 'Equipment', icon: Shield },
   { id: 'recipes', label: 'Recipes', icon: FlaskConical },
   { id: 'trophies', label: 'Trophies', icon: Trophy },
@@ -39,6 +54,16 @@ function AppContent() {
         return <Dashboard />;
       case 'quests':
         return <QuestTracker />;
+      case 'bestiary':
+        return <BestiaryBrowser />;
+      case 'loot':
+        return <LootTracker />;
+      case 'hunts':
+        return <HuntGuide />;
+      case 'bosses':
+        return <BossGuide />;
+      case 'rare':
+        return <RareGameTracker />;
       case 'equipment':
         return <EquipmentChecklist />;
       case 'recipes':

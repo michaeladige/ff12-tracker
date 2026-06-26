@@ -19,6 +19,12 @@ const initialState = {
   zones: {},
   magic: {},
   technicks: {},
+  bestiary: {},
+  loot: {},
+  bazaar: {},
+  storyBosses: {},
+  esperBosses: {},
+  rareGames: {},
 };
 
 function loadProgress() {
