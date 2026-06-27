@@ -179,6 +179,12 @@ export default function MagicBrowser() {
                         <span className={`px-1.5 py-0.5 rounded text-xs ${typeColors[spell.type] || ''}`}>{spell.type}</span>
                       </div>
                     )}
+                    {spell.jobs && (
+                      <div className="sm:col-span-2">
+                        <span className="text-ff-text-dim">Available for: </span>
+                        <span className="text-ff-text">{spell.jobs}</span>
+                      </div>
+                    )}
                   </div>
 
                   {spell.acquired && (

@@ -214,6 +214,7 @@ export default function EquipmentBrowser() {
                       <div><span className="text-ff-text-dim">Evade: </span><span className="text-ff-text">{item.eva ?? '—'}</span></div>
                       {item.effect && <div><span className="text-ff-text-dim">Effect: </span><span className="text-ff-text">{item.effect}</span></div>}
                       {item.license && <div><span className="text-ff-text-dim">License: </span><span className="text-ff-text">{item.license}</span></div>}
+                      {item.jobs && <div className="sm:col-span-2"><span className="text-ff-text-dim">Available for: </span><span className="text-ff-text">{item.jobs}</span></div>}
                     </div>
                   )}
 
