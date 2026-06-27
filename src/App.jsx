@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ProgressProvider } from './context/ProgressContext';
 import Dashboard from './components/Dashboard';
 import QuestTracker from './components/QuestTracker';
-import EquipmentChecklist from './components/EquipmentChecklist';
+import EquipmentBrowser from './components/EquipmentBrowser';
 import RecipeBook from './components/RecipeBook';
 import TrophiesAndCharacters from './components/TrophiesAndCharacters';
 import GuideViewer from './components/GuideViewer';
@@ -68,7 +68,7 @@ function AppContent() {
       case 'rare':
         return <RareGameTracker />;
       case 'equipment':
-        return <EquipmentChecklist />;
+        return <EquipmentBrowser />;
       case 'recipes':
         return <RecipeBook />;
       case 'magic':
