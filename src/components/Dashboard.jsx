@@ -1,73 +1,115 @@
 import { useProgress } from '../context/ProgressContext';
-import { Trophy, MapPin, Target, Zap } from 'lucide-react';
+import { mainQuests, sideQuests, hunts, eliteHunts } from '../data/quests';
+import { weapons, shields, armor, accessories } from '../data/equipment';
+import { magicSpells, technicks } from '../data/recipes';
+import { enemies } from '../data/bestiary';
+import { Trophy, MapPin, Target, Zap, Bug, Sword, ShieldCheck, Shirt, Gem, Wand2, Skull } from 'lucide-react';
 
 export default function Dashboard() {
-  const { getStats, getOverallStats } = useProgress();
-  const overall = getOverallStats();
-  const mainQuests = getStats('mainQuests');
-  const sideQuests = getStats('sideQuests');
-  const hunts = getStats('hunts');
-  const weapons = getStats('weapons');
-  const armor = getStats('armor');
-  const espers = getStats('espers');
-  const trophies = getStats('trophies');
+  const { getStats } = useProgress();
+
+  // Get actual totals from data files
+  const totalMainQuests = mainQuests.length;
+  const totalSideQuests = sideQuests.length;
+  const totalHunts = hunts.length + eliteHunts.length;
+  const totalWeapons = weapons.length;
+  const totalArmor = armor.length + shields.length;
+  const totalAccessories = accessories.length;
+  const totalEspers = enemies.filter(e => e.zone === 'Espers').length;
+  const totalMagic = magicSpells.length + technicks.length;
+
+  // Get progress stats
+  const mainQuestStats = getStats('mainQuests');
+  const sideQuestStats = getStats('sideQuests');
+  const huntStats = getStats('hunts');
+  const eliteHuntStats = getStats('eliteHunts');
+  const weaponStats = getStats('weapons');
+  const armorStats = getStats('armor');
+  const shieldStats = getStats('shields');
+  const accessoryStats = getStats('accessories');
+  const esperStats = getStats('espers');
+  const magicStats = getStats('magic');
+  const technickStats = getStats('technicks');
+
+  // Calculate completed counts
+  const completedMainQuests = mainQuestStats.completed;
+  const completedSideQuests = sideQuestStats.completed;
+  const completedHunts = huntStats.completed + eliteHuntStats.completed;
+  const completedWeapons = weaponStats.completed;
+  const completedArmor = armorStats.completed + shieldStats.completed;
+  const completedAccessories = accessoryStats.completed;
+  const completedEspers = esperStats.completed;
+  const completedMagic = magicStats.completed + technickStats.completed;
+
+  // Calculate overall stats
+  const overallTotal = totalMainQuests + totalSideQuests + totalHunts + totalWeapons + totalArmor + totalAccessories + totalEspers + totalMagic;
+  const overallCompleted = completedMainQuests + completedSideQuests + completedHunts + completedWeapons + completedArmor + completedAccessories + completedEspers + completedMagic;
+  const overallPercentage = overallTotal > 0 ? Math.round((overallCompleted / overallTotal) * 100) : 0;
 
   const statCards = [
     {
       label: 'Main Quests',
-      completed: mainQuests.completed,
-      total: mainQuests.total,
-      inProgress: mainQuests.inProgress,
+      completed: completedMainQuests,
+      total: totalMainQuests,
+      inProgress: mainQuestStats.inProgress,
       icon: MapPin,
       color: 'text-ff-gold',
     },
     {
       label: 'Side Quests',
-      completed: sideQuests.completed,
-      total: sideQuests.total,
-      inProgress: sideQuests.inProgress,
+      completed: completedSideQuests,
+      total: totalSideQuests,
+      inProgress: sideQuestStats.inProgress,
       icon: Target,
       color: 'text-blue-400',
     },
     {
       label: 'Hunts',
-      completed: hunts.completed,
-      total: hunts.total,
-      inProgress: hunts.inProgress,
-      icon: Zap,
+      completed: completedHunts,
+      total: totalHunts,
+      inProgress: huntStats.inProgress + eliteHuntStats.inProgress,
+      icon: Skull,
       color: 'text-red-400',
     },
     {
       label: 'Weapons',
-      completed: weapons.completed,
-      total: weapons.total,
-      inProgress: weapons.inProgress,
-      icon: Target,
+      completed: completedWeapons,
+      total: totalWeapons,
+      inProgress: weaponStats.inProgress,
+      icon: Sword,
       color: 'text-cyan-400',
     },
     {
-      label: 'Armor',
-      completed: armor.completed,
-      total: armor.total,
-      inProgress: armor.inProgress,
-      icon: Target,
+      label: 'Armor & Shields',
+      completed: completedArmor,
+      total: totalArmor,
+      inProgress: armorStats.inProgress + shieldStats.inProgress,
+      icon: ShieldCheck,
       color: 'text-purple-400',
     },
     {
+      label: 'Accessories',
+      completed: completedAccessories,
+      total: totalAccessories,
+      inProgress: accessoryStats.inProgress,
+      icon: Gem,
+      color: 'text-pink-400',
+    },
+    {
       label: 'Espers',
-      completed: espers.completed,
-      total: espers.total,
-      inProgress: espers.inProgress,
+      completed: completedEspers,
+      total: totalEspers,
+      inProgress: esperStats.inProgress,
       icon: Zap,
       color: 'text-amber-400',
     },
     {
-      label: 'Trophies',
-      completed: trophies.completed,
-      total: trophies.total,
-      inProgress: trophies.inProgress,
-      icon: Trophy,
-      color: 'text-yellow-400',
+      label: 'Magicks & Technicks',
+      completed: completedMagic,
+      total: totalMagic,
+      inProgress: magicStats.inProgress + technickStats.inProgress,
+      icon: Wand2,
+      color: 'text-green-400',
     },
   ];
 
@@ -81,14 +123,14 @@ export default function Dashboard() {
         <div className="relative h-4 bg-ff-bg rounded-full overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-ff-gold to-ff-gold-light rounded-full transition-all duration-500"
-            style={{ width: `${overall.percentage}%` }}
+            style={{ width: `${overallPercentage}%` }}
           />
         </div>
         <div className="flex justify-between mt-2 text-sm">
           <span className="text-ff-text-dim">
-            {overall.completed} / {overall.total} items completed
+            {overallCompleted} / {overallTotal} items completed
           </span>
-          <span className="text-ff-gold font-semibold">{overall.percentage}%</span>
+          <span className="text-ff-gold font-semibold">{overallPercentage}%</span>
         </div>
       </div>
 
