@@ -7,6 +7,7 @@ import RecipeBook from './components/RecipeBook';
 import TrophiesAndCharacters from './components/TrophiesAndCharacters';
 import GuideViewer from './components/GuideViewer';
 import BestiaryBrowser from './components/BestiaryBrowser';
+import MagicBrowser from './components/MagicBrowser';
 import LootTracker from './components/LootTracker';
 import HuntGuide from './components/HuntGuide';
 import BossGuide from './components/BossGuide';
@@ -24,6 +25,7 @@ import {
   Target,
   Crown,
   Star,
+  Wand2,
   Settings as SettingsIcon,
   Menu,
   X,
@@ -39,6 +41,7 @@ const navItems = [
   { id: 'rare', label: 'Rare Games', icon: Star },
   { id: 'equipment', label: 'Equipment', icon: Shield },
   { id: 'recipes', label: 'Recipes', icon: FlaskConical },
+  { id: 'magic', label: 'Magicks', icon: Wand2 },
   { id: 'trophies', label: 'Trophies', icon: Trophy },
   { id: 'guide', label: 'Guide', icon: BookOpen },
   { id: 'settings', label: 'Settings', icon: SettingsIcon },
@@ -68,6 +71,8 @@ function AppContent() {
         return <EquipmentChecklist />;
       case 'recipes':
         return <RecipeBook />;
+      case 'magic':
+        return <MagicBrowser />;
       case 'trophies':
         return <TrophiesAndCharacters />;
       case 'guide':
