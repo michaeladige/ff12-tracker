@@ -3,7 +3,7 @@ import { ProgressProvider } from './context/ProgressContext';
 import Dashboard from './components/Dashboard';
 import QuestTracker from './components/QuestTracker';
 import EquipmentBrowser from './components/EquipmentBrowser';
-import RecipeBook from './components/RecipeBook';
+
 import TrophiesAndCharacters from './components/TrophiesAndCharacters';
 import GuideViewer from './components/GuideViewer';
 import BestiaryBrowser from './components/BestiaryBrowser';
@@ -17,7 +17,7 @@ import {
   Home,
   Swords,
   Shield,
-  FlaskConical,
+
   Trophy,
   BookOpen,
   Bug,
@@ -40,7 +40,7 @@ const navItems = [
   { id: 'bosses', label: 'Bosses', icon: Crown },
   { id: 'rare', label: 'Rare Games', icon: Star },
   { id: 'equipment', label: 'Equipment', icon: Shield },
-  { id: 'recipes', label: 'Recipes', icon: FlaskConical },
+
   { id: 'magic', label: 'Magicks', icon: Wand2 },
   { id: 'trophies', label: 'Trophies', icon: Trophy },
   { id: 'guide', label: 'Guide', icon: BookOpen },
@@ -69,8 +69,7 @@ function AppContent() {
         return <RareGameTracker />;
       case 'equipment':
         return <EquipmentBrowser />;
-      case 'recipes':
-        return <RecipeBook />;
+
       case 'magic':
         return <MagicBrowser />;
       case 'trophies':

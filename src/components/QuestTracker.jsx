@@ -15,6 +15,16 @@ export default function QuestTracker() {
           <span className="text-xs text-ff-text-dim">
             {item.chapter} &middot; {item.zone}
           </span>
+          {item.guide && (
+            <a
+              href={item.guide}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-ff-gold hover:underline mt-1"
+            >
+              View Walkthrough →
+            </a>
+          )}
         </div>
       ),
     },
@@ -28,6 +38,16 @@ export default function QuestTracker() {
           <span className="text-xs text-ff-text-dim">
             {item.type} &middot; {item.zone}
           </span>
+          {item.guide && (
+            <a
+              href={item.guide}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-ff-gold hover:underline mt-1"
+            >
+              View Walkthrough →
+            </a>
+          )}
         </div>
       ),
     },
@@ -41,6 +61,16 @@ export default function QuestTracker() {
           <span className="text-xs text-ff-text-dim">
             Rank {item.rank} &middot; {item.target} &middot; {item.reward.toLocaleString()} gil
           </span>
+          {item.guide && (
+            <a
+              href={item.guide}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-ff-gold hover:underline mt-1"
+            >
+              View Walkthrough →
+            </a>
+          )}
         </div>
       ),
     },
@@ -54,6 +84,16 @@ export default function QuestTracker() {
           <span className="text-xs text-ff-text-dim">
             {item.target} &middot; {item.zone} &middot; {item.reward.toLocaleString()} gil
           </span>
+          {item.guide && (
+            <a
+              href={item.guide}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-ff-gold hover:underline mt-1"
+            >
+              View Walkthrough →
+            </a>
+          )}
         </div>
       ),
     },
