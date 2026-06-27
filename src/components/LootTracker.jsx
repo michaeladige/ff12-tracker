@@ -136,29 +136,51 @@ export default function LootTracker() {
                   </button>
                 </div>
                 {isExpanded && (
-                  <div className="px-3 pb-3 border-t border-ff-border pt-2 space-y-2 text-xs">
+                  <div className="px-3 pb-3 border-t border-ff-border pt-2 space-y-3 text-xs">
                     <div>
-                      <span className="text-ff-gold font-medium">Ingredients: </span>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
+                      <span className="text-ff-gold font-medium">Ingredients Needed: </span>
+                      <div className="mt-2 space-y-2">
                         {item.ingredients?.map((ing, i) => {
                           const ingName = ing.replace(/\s*x\d+$/, '').trim();
                           const enemyList = getEnemiesForLoot(ingName);
                           return (
-                            <span key={i} className="bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
-                              {ing}
-                              {enemyList.length > 0 && (
-                                <span className="text-ff-gold text-[10px]" title={`Dropped by: ${enemyList.map(e => e.name).join(', ')}`}>
-                                  <Bug size={10} />
-                                </span>
+                            <div key={i} className="bg-ff-bg rounded-lg p-2">
+                              <div className="font-medium text-ff-text">{ing}</div>
+                              {enemyList.length > 0 ? (
+                                <div className="mt-1 space-y-1">
+                                  {enemyList.slice(0, 5).map((e, j) => (
+                                    <div key={j} className="flex items-center gap-2 text-ff-text-dim">
+                                      <Bug size={10} className="text-ff-gold" />
+                                      <span>{e.name}</span>
+                                      <span className="text-ff-text-dim">({e.zone})</span>
+                                      <span className="text-ff-gold">{e.rate} {e.type}</span>
+                                    </div>
+                                  ))}
+                                  {enemyList.length > 5 && (
+                                    <div className="text-ff-text-dim ml-4">
+                                      +{enemyList.length - 5} more enemies...
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className="mt-1 text-ff-text-dim ml-4">
+                                  Find in shops or quest rewards
+                                </div>
                               )}
-                            </span>
+                            </div>
                           );
                         })}
                       </div>
                     </div>
                     <div>
                       <span className="text-ff-gold font-medium">Rewards: </span>
-                      <span className="text-ff-text-dim">{item.rewards?.join(', ')}</span>
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {item.rewards?.map((reward, i) => (
+                          <span key={i} className="bg-green-900/30 text-green-400 px-2 py-1 rounded">
+                            {reward}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
