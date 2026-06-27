@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { enemies as bestiary } from '../data/bestiary';
+import { lootItems } from '../data/loot';
 import { useProgress } from '../context/ProgressContext';
-import { Search, ChevronDown, ChevronRight, Bug, Eye, Skull } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, Bug, Eye, Skull, ExternalLink } from 'lucide-react';
 
 const elementalColors = {
   Fire: 'text-red-400', Ice: 'text-blue-400', Thunder: 'text-yellow-400',
@@ -102,9 +103,19 @@ export default function BestiaryBrowser() {
                   <div>
                     <h4 className="text-xs font-medium text-ff-gold mb-1">Steal</h4>
                     <div className="flex flex-wrap gap-2">
-                      {enemy.steals.map((s, i) => (
-                        <span key={i} className="text-xs bg-ff-card-hover px-2 py-1 rounded">{s.item} ({s.rate})</span>
-                      ))}
+                      {enemy.steals.map((s, i) => {
+                        const lootItem = lootItems.find(l => l.name.toLowerCase() === s.item.toLowerCase());
+                        return (
+                          <span key={i} className="text-xs bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
+                            {s.item} ({s.rate})
+                            {lootItem && (
+                              <span className="text-ff-gold text-[10px]" title={`Loot ID: ${lootItem.id}`}>
+                                <ExternalLink size={10} />
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -113,9 +124,19 @@ export default function BestiaryBrowser() {
                   <div>
                     <h4 className="text-xs font-medium text-ff-gold mb-1">Drop</h4>
                     <div className="flex flex-wrap gap-2">
-                      {enemy.drops.map((d, i) => (
-                        <span key={i} className="text-xs bg-ff-card-hover px-2 py-1 rounded">{d.item} ({d.rate})</span>
-                      ))}
+                      {enemy.drops.map((d, i) => {
+                        const lootItem = lootItems.find(l => l.name.toLowerCase() === d.item.toLowerCase());
+                        return (
+                          <span key={i} className="text-xs bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
+                            {d.item} ({d.rate})
+                            {lootItem && (
+                              <span className="text-ff-gold text-[10px]" title={`Loot ID: ${lootItem.id}`}>
+                                <ExternalLink size={10} />
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
