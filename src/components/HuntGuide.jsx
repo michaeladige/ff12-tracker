@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { huntDetails, eliteHuntDetails } from '../data/huntDetails';
 import { useProgress } from '../context/ProgressContext';
-import { Target, ChevronDown, ChevronRight, CheckCircle, Circle, Trophy } from 'lucide-react';
+import { Target, ChevronDown, ChevronRight, CheckCircle, Circle, Trophy, Sparkles } from 'lucide-react';
 
 export default function HuntGuide() {
   const { toggleItem, progress } = useProgress();
@@ -60,14 +60,22 @@ export default function HuntGuide() {
 
       <div className="space-y-2">
         {filtered.map((hunt) => {
-          const isCompleted = progress[category]?.[hunt.id] === 'completed';
+          const status = progress[category]?.[hunt.id];
+          const isCompleted = status === 'completed';
+          const isInProgress = status === 'in_progress';
           const isExpanded = expandedId === hunt.id;
 
+          const getStatusIcon = () => {
+            if (isCompleted) return <CheckCircle size={18} className="text-green-400" />;
+            if (isInProgress) return <Sparkles size={18} className="text-yellow-400" />;
+            return <Circle size={18} className="text-ff-text-dim" />;
+          };
+
           return (
-            <div key={hunt.id} className="bg-ff-card border border-ff-border rounded-lg overflow-hidden">
+            <div key={hunt.id} className={`bg-ff-card border rounded-lg overflow-hidden ${isCompleted ? 'border-green-800/50' : isInProgress ? 'border-yellow-800/50' : 'border-ff-border'}`}>
               <div className="flex items-center gap-3 px-4 py-3">
                 <button onClick={() => toggleItem(category, hunt.id)} className="flex-shrink-0">
-                  {isCompleted ? <CheckCircle size={18} className="text-green-400" /> : <Circle size={18} className="text-ff-text-dim" />}
+                  {getStatusIcon()}
                 </button>
                 <button onClick={() => setExpandedId(isExpanded ? null : hunt.id)} className="flex items-center gap-2 flex-1 text-left">
                   {isExpanded ? <ChevronDown size={16} className="text-ff-text-dim" /> : <ChevronRight size={16} className="text-ff-text-dim" />}
@@ -81,6 +89,11 @@ export default function HuntGuide() {
                 </button>
                 <span className="text-xs text-ff-text-dim hidden sm:inline">Lv.{hunt.recommendedLevel}</span>
               </div>
+              {isInProgress && (
+                <div className="px-4 pb-2 text-xs text-yellow-400">
+                  In Progress
+                </div>
+              )}
 
               {isExpanded && (
                 <div className="px-4 pb-4 border-t border-ff-border pt-3 space-y-3">
