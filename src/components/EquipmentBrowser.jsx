@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { weapons, shields, armor } from '../data/equipment';
+import { weapons, shields, armor, accessories } from '../data/equipment';
 import { useProgress } from '../context/ProgressContext';
-import { Search, ChevronDown, ChevronRight, Sword, ShieldCheck, Shirt, CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, Sword, ShieldCheck, Shirt, Gem, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 
 const weaponTypeColors = {
   Swords: 'bg-blue-500/15 text-blue-400',
@@ -38,6 +38,13 @@ export default function EquipmentBrowser() {
   const weaponTypes = useMemo(() => ['All', ...new Set(weapons.map((w) => w.type))].sort(), []);
   const armorTypes = useMemo(() => ['All', ...new Set(armor.map((a) => a.type))].sort(), []);
 
+  const filteredAccessories = useMemo(() => {
+    return accessories.filter((a) => {
+      return a.name.toLowerCase().includes(search.toLowerCase()) ||
+        (a.effect && a.effect.toLowerCase().includes(search.toLowerCase()));
+    });
+  }, [search]);
+
   const filteredWeapons = useMemo(() => {
     return weapons.filter((w) => {
       const matchesSearch = w.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -62,7 +69,7 @@ export default function EquipmentBrowser() {
     });
   }, [search, typeFilter]);
 
-  const items = tab === 'weapons' ? filteredWeapons : tab === 'shields' ? filteredShields : filteredArmor;
+  const items = tab === 'weapons' ? filteredWeapons : tab === 'shields' ? filteredShields : tab === 'armor' ? filteredArmor : filteredAccessories;
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -85,7 +92,7 @@ export default function EquipmentBrowser() {
         <Sword size={24} className="text-ff-gold" />
         <h1 className="text-xl font-bold">Equipment</h1>
         <span className="text-sm text-ff-text-dim ml-auto">
-          {items.length} {tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : 'armor pieces'}
+          {items.length} {tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : tab === 'armor' ? 'armor pieces' : 'accessories'}
         </span>
       </div>
 
@@ -118,6 +125,15 @@ export default function EquipmentBrowser() {
           <Shirt size={16} />
           Armor ({armor.length})
         </button>
+        <button
+          onClick={() => { setTab('accessories'); setTypeFilter('All'); setSearch(''); setExpandedId(null); }}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition-colors ${
+            tab === 'accessories' ? 'bg-ff-gold/20 text-ff-gold' : 'text-ff-text-dim hover:text-ff-text'
+          }`}
+        >
+          <Gem size={16} />
+          Accessories ({accessories.length})
+        </button>
       </div>
 
       {/* Filters */}
@@ -126,7 +142,7 @@ export default function EquipmentBrowser() {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ff-text-dim" />
           <input
             type="text"
-            placeholder={`Search ${tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : 'armor'}...`}
+            placeholder={`Search ${tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : tab === 'armor' ? 'armor' : 'accessories'}...`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2 bg-ff-card border border-ff-border rounded-lg text-sm focus:outline-none focus:border-ff-gold"
@@ -137,7 +153,7 @@ export default function EquipmentBrowser() {
           onChange={(e) => { setTypeFilter(e.target.value); setExpandedId(null); }}
           className="px-3 py-2 bg-ff-card border border-ff-border rounded-lg text-sm focus:outline-none focus:border-ff-gold"
         >
-          {(tab === 'weapons' ? weaponTypes : tab === 'shields' ? ['All'] : armorTypes).map((t) => (
+          {(tab === 'weapons' ? weaponTypes : tab === 'shields' ? ['All'] : tab === 'armor' ? armorTypes : ['All']).map((t) => (
             <option key={t} value={t}>{t}</option>
           ))}
         </select>
@@ -146,7 +162,7 @@ export default function EquipmentBrowser() {
       {/* Item List */}
       <div className="space-y-1">
         {items.map((item) => {
-          const category = tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : 'armor';
+          const category = tab === 'weapons' ? 'weapons' : tab === 'shields' ? 'shields' : tab === 'armor' ? 'armor' : 'accessories';
           const isExpanded = expandedId === item.id;
 
           return (
@@ -177,11 +193,15 @@ export default function EquipmentBrowser() {
                       {item.type} ({item.slot})
                     </span>
                   )}
+                  {tab === 'accessories' && (
+                    <span className="ml-2 text-xs px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-400">Accessory</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3 text-xs text-ff-text-dim">
                   {tab === 'weapons' && item.atk != null && <span>ATK {item.atk}</span>}
                   {(tab === 'shields' || tab === 'armor') && item.eva != null && <span>EVA {item.eva}</span>}
                   {tab === 'armor' && item.def != null && <span>DEF {item.def}</span>}
+                  {tab === 'accessories' && item.def != null && <span>DEF {item.def}</span>}
                   {item.price != null && <span>{Number(item.price).toLocaleString()} gil</span>}
                 </div>
               </button>
@@ -208,6 +228,22 @@ export default function EquipmentBrowser() {
 
                   {tab === 'armor' && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div><span className="text-ff-text-dim">Defense: </span><span className="text-ff-text">{item.def ?? '—'}</span></div>
+                      <div><span className="text-ff-text-dim">Mag Resist: </span><span className="text-ff-text">{item.magRes ?? '—'}</span></div>
+                      {item.hp && <div><span className="text-ff-text-dim">HP: </span><span className="text-ff-text">+{item.hp}</span></div>}
+                      {item.mp && <div><span className="text-ff-text-dim">MP: </span><span className="text-ff-text">+{item.mp}</span></div>}
+                      {item.strength && <div><span className="text-ff-text-dim">Strength: </span><span className="text-ff-text">+{item.strength}</span></div>}
+                      {item.magPow && <div><span className="text-ff-text-dim">Magick Power: </span><span className="text-ff-text">+{item.magPow}</span></div>}
+                      {item.vitality && <div><span className="text-ff-text-dim">Vitality: </span><span className="text-ff-text">+{item.vitality}</span></div>}
+                      {item.speed && <div><span className="text-ff-text-dim">Speed: </span><span className="text-ff-text">+{item.speed}</span></div>}
+                      {item.element && <div><span className="text-ff-text-dim">Element: </span><span className="text-ff-text">{item.element}</span></div>}
+                      {item.license && <div><span className="text-ff-text-dim">License: </span><span className="text-ff-text">{item.license}</span></div>}
+                    </div>
+                  )}
+
+                  {tab === 'accessories' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div><span className="text-ff-text-dim">Effect: </span><span className="text-ff-text">{item.effect ?? '—'}</span></div>
                       <div><span className="text-ff-text-dim">Defense: </span><span className="text-ff-text">{item.def ?? '—'}</span></div>
                       <div><span className="text-ff-text-dim">Mag Resist: </span><span className="text-ff-text">{item.magRes ?? '—'}</span></div>
                       {item.hp && <div><span className="text-ff-text-dim">HP: </span><span className="text-ff-text">+{item.hp}</span></div>}
