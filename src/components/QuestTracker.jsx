@@ -11,44 +11,36 @@ export default function QuestTracker() {
     return <QuestDetail quest={selectedQuest} onBack={() => setSelectedQuest(null)} />;
   }
 
+  // Returns a renderItem function for a quest group. Uses a div + stopPropagation so
+  // clicking the name area navigates to QuestDetail while the ChecklistSection's own
+  // outer button (the status icon on the left) still toggles completion state.
+  const renderQuestItem = (category, subtitleField) => (item) => (
+    <div
+      onClick={(e) => { e.stopPropagation(); setSelectedQuest({ ...item, category }); }}
+      className="flex flex-col items-start w-full text-left"
+    >
+      <div className="flex items-center gap-2 w-full">
+        <ChevronRight size={14} className="text-ff-text-dim" />
+        <span className="text-sm font-medium">{item.name}</span>
+      </div>
+      <span className="text-xs text-ff-text-dim ml-6">
+        {item[subtitleField]} &middot; {item.zone}
+      </span>
+    </div>
+  );
+
   const questGroups = [
     {
       title: 'Main Quests',
       items: mainQuests,
       category: 'mainQuests',
-      renderItem: (item) => (
-        <button
-          onClick={() => setSelectedQuest({ ...item, category: 'mainQuests' })}
-          className="flex flex-col items-start w-full text-left hover:bg-ff-card-hover rounded-lg p-2 -m-2 transition-colors"
-        >
-          <div className="flex items-center gap-2 w-full">
-            <ChevronRight size={14} className="text-ff-text-dim" />
-            <span className="text-sm font-medium">{item.name}</span>
-          </div>
-          <span className="text-xs text-ff-text-dim ml-6">
-            {item.chapter} &middot; {item.zone}
-          </span>
-        </button>
-      ),
+      renderItem: renderQuestItem('mainQuests', 'chapter'),
     },
     {
       title: 'Side Quests',
       items: sideQuests,
       category: 'sideQuests',
-      renderItem: (item) => (
-        <button
-          onClick={() => setSelectedQuest({ ...item, category: 'sideQuests' })}
-          className="flex flex-col items-start w-full text-left hover:bg-ff-card-hover rounded-lg p-2 -m-2 transition-colors"
-        >
-          <div className="flex items-center gap-2 w-full">
-            <ChevronRight size={14} className="text-ff-text-dim" />
-            <span className="text-sm font-medium">{item.name}</span>
-          </div>
-          <span className="text-xs text-ff-text-dim ml-6">
-            {item.type} &middot; {item.zone}
-          </span>
-        </button>
-      ),
+      renderItem: renderQuestItem('sideQuests', 'type'),
     },
   ];
 

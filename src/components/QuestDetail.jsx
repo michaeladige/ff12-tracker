@@ -1,18 +1,12 @@
 import { useProgress } from '../context/ProgressContext';
-import { ArrowLeft, CheckCircle, Circle, Sparkles } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import StatusIcon from './StatusIcon';
 
 export default function QuestDetail({ quest, onBack }) {
   const { toggleItem, progress } = useProgress();
 
   const status = progress[quest.category]?.[quest.id];
-  const isCompleted = status === 'completed';
   const isInProgress = status === 'in_progress';
-
-  const getStatusIcon = () => {
-    if (isCompleted) return <CheckCircle size={20} className="text-green-400" />;
-    if (isInProgress) return <Sparkles size={20} className="text-yellow-400" />;
-    return <Circle size={20} className="text-ff-text-dim" />;
-  };
 
   return (
     <div className="space-y-4">
@@ -30,7 +24,7 @@ export default function QuestDetail({ quest, onBack }) {
             onClick={() => toggleItem(quest.category, quest.id)}
             className="flex-shrink-0"
           >
-            {getStatusIcon()}
+            <StatusIcon status={status} size={20} />
           </button>
           <div>
             <h1 className="text-xl font-bold">{quest.name}</h1>
@@ -55,7 +49,7 @@ export default function QuestDetail({ quest, onBack }) {
           </div>
         )}
 
-        {quest.reward && (
+        {quest.reward != null && (
           <div className="mt-4 text-sm">
             <span className="text-ff-text-dim">Reward: </span>
             <span className="text-ff-gold">{quest.reward.toLocaleString()} gil</span>

@@ -45,6 +45,49 @@ function getBazaarForLoot(lootName) {
   return results;
 }
 
+// Expanded detail panel for a loot item — isolated so the expensive lookups
+// only run when the row is actually open, and useMemo caches them across re-renders.
+function LootItemExpanded({ item }) {
+  const enemyList = useMemo(() => getEnemiesForLoot(item.name), [item.name]);
+  const bazaarList = useMemo(() => getBazaarForLoot(item.name), [item.name]);
+  return (
+    <div className="px-3 pb-3 border-t border-ff-border pt-2 space-y-2 text-xs">
+      {enemyList.length > 0 && (
+        <div>
+          <span className="text-ff-gold font-medium">Dropped/Stolen by: </span>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            {enemyList.map((e) => (
+              <span key={e.id} className="bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
+                <Bug size={10} className="text-ff-text-dim" />
+                {e.name} ({e.type}{e.rate != null ? `, ${e.rate}` : ''})
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {bazaarList.length > 0 && (
+        <div>
+          <span className="text-ff-gold font-medium">Used in Bazaar: </span>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            {bazaarList.map((bz) => (
+              <span key={bz.id} className="bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
+                <ShoppingCart size={10} className="text-ff-text-dim" />
+                {bz.name} ({bz.quantity})
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {item.sources?.length > 0 && (
+        <div>
+          <span className="text-ff-gold font-medium">Sources: </span>
+          <span className="text-ff-text-dim">{item.sources.join('; ')}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LootTracker() {
   const { toggleItem, progress } = useProgress();
   const [search, setSearch] = useState('');
@@ -148,19 +191,14 @@ export default function LootTracker() {
                               <div className="font-medium text-ff-text">{ing}</div>
                               {enemyList.length > 0 ? (
                                 <div className="mt-1 space-y-1">
-                                  {enemyList.slice(0, 5).map((e, j) => (
-                                    <div key={j} className="flex items-center gap-2 text-ff-text-dim">
+                                  {enemyList.map((e) => (
+                                    <div key={e.id} className="flex items-center gap-2 text-ff-text-dim">
                                       <Bug size={10} className="text-ff-gold" />
                                       <span>{e.name}</span>
                                       <span className="text-ff-text-dim">({e.zone})</span>
-                                      <span className="text-ff-gold">{e.rate} {e.type}</span>
+                                      {e.rate != null && <span className="text-ff-gold">{e.rate} {e.type}</span>}
                                     </div>
                                   ))}
-                                  {enemyList.length > 5 && (
-                                    <div className="text-ff-text-dim ml-4">
-                                      +{enemyList.length - 5} more enemies...
-                                    </div>
-                                  )}
                                 </div>
                               ) : (
                                 <div className="mt-1 text-ff-text-dim ml-4">
@@ -188,9 +226,6 @@ export default function LootTracker() {
             );
           }
 
-          const enemyList = getEnemiesForLoot(item.name);
-          const bazaarList = getBazaarForLoot(item.name);
-
           return (
             <div key={item.id} className="bg-ff-card border border-ff-border rounded-lg overflow-hidden">
               <div className="flex items-center gap-3 px-3 py-2">
@@ -207,42 +242,7 @@ export default function LootTracker() {
                   </div>
                 </button>
               </div>
-              {isExpanded && (
-                <div className="px-3 pb-3 border-t border-ff-border pt-2 space-y-2 text-xs">
-                  {enemyList.length > 0 && (
-                    <div>
-                      <span className="text-ff-gold font-medium">Dropped/Stolen by: </span>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        {enemyList.map((e, i) => (
-                          <span key={i} className="bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
-                            <Bug size={10} className="text-ff-text-dim" />
-                            {e.name} ({e.type}, {e.rate})
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {bazaarList.length > 0 && (
-                    <div>
-                      <span className="text-ff-gold font-medium">Used in Bazaar: </span>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        {bazaarList.map((bz, i) => (
-                          <span key={i} className="bg-ff-card-hover px-2 py-1 rounded flex items-center gap-1">
-                            <ShoppingCart size={10} className="text-ff-text-dim" />
-                            {bz.name} ({bz.quantity})
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {item.sources?.length > 0 && (
-                    <div>
-                      <span className="text-ff-gold font-medium">Sources: </span>
-                      <span className="text-ff-text-dim">{item.sources.join('; ')}</span>
-                    </div>
-                  )}
-                </div>
-              )}
+              {isExpanded && <LootItemExpanded item={item} />}
             </div>
           );
         })}

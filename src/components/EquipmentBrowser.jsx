@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { weapons, shields, armor, accessories } from '../data/equipment';
 import { useProgress } from '../context/ProgressContext';
-import { Search, ChevronDown, ChevronRight, Sword, ShieldCheck, Shirt, Gem, CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, Sword, ShieldCheck, Shirt, Gem } from 'lucide-react';
+import StatusIcon from './StatusIcon';
 
 const weaponTypeColors = {
   Swords: 'bg-blue-500/15 text-blue-400',
@@ -75,12 +76,6 @@ export default function EquipmentBrowser() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  const getStatusIcon = (id, category) => {
-    const status = progress[category]?.[id];
-    if (status === 'completed') return <CheckCircle2 size={16} className="text-green-400" />;
-    if (status === 'in_progress') return <Sparkles size={16} className="text-yellow-400" />;
-    return <Circle size={16} className="text-ff-text-dim" />;
-  };
 
   const toggleProgress = (id, category) => {
     toggleItem(category, id);
@@ -175,7 +170,7 @@ export default function EquipmentBrowser() {
                   onClick={(e) => { e.stopPropagation(); toggleProgress(item.id, category); }}
                   className="flex-shrink-0"
                 >
-                  {getStatusIcon(item.id, category)}
+                  <StatusIcon status={progress[category]?.[item.id]} size={16} />
                 </button>
                 {isExpanded ? <ChevronDown size={16} className="text-ff-text-dim" /> : <ChevronRight size={16} className="text-ff-text-dim" />}
                 <div className="flex-1 text-left min-w-0">

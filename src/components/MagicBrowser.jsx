@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { magicSpells, technicks } from '../data/recipes';
 import { useProgress } from '../context/ProgressContext';
-import { Search, ChevronDown, ChevronRight, Wand2, Zap, CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, Wand2, Zap } from 'lucide-react';
+import StatusIcon from './StatusIcon';
 
 const typeColors = {
   'White Magick': 'bg-white/10 text-white',
@@ -52,12 +53,6 @@ export default function MagicBrowser() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  const getStatusIcon = (id, category) => {
-    const status = progress[category]?.[id];
-    if (status === 'completed') return <CheckCircle2 size={16} className="text-green-400" />;
-    if (status === 'in_progress') return <Sparkles size={16} className="text-yellow-400" />;
-    return <Circle size={16} className="text-ff-text-dim" />;
-  };
 
   const toggleProgress = (id, category) => {
     toggleItem(category, id);
@@ -140,7 +135,7 @@ export default function MagicBrowser() {
                   onClick={(e) => { e.stopPropagation(); toggleProgress(spell.id, category); }}
                   className="flex-shrink-0"
                 >
-                  {getStatusIcon(spell.id, category)}
+                  <StatusIcon status={progress[category]?.[spell.id]} size={16} />
                 </button>
                 {isExpanded ? <ChevronDown size={16} className="text-ff-text-dim" /> : <ChevronRight size={16} className="text-ff-text-dim" />}
                 <div className="flex-1 text-left min-w-0">
